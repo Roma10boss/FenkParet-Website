@@ -27,5 +27,8 @@ node_modules/
 .vscode/
 .idea/
 
+# Claude
+.claude/
+
 # OS
 Thumbs.db
