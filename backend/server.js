@@ -16,7 +16,8 @@ const io = socketIo(server, {
     origin: [
       process.env.FRONTEND_URL || "http://localhost:3000",
       "http://localhost:3000",
-      "https://romagustave10.github.io"
+      "https://romagustave10.github.io",
+      "https://visionary-meringue-9c1ece.netlify.app"
     ],
     methods: ["GET", "POST"],
     credentials: true
@@ -57,7 +58,8 @@ app.use(cors({
       process.env.FRONTEND_URL || 'http://localhost:3000',
       'http://localhost:3000',
       'http://localhost:3001',
-      'https://romagustave10.github.io'
+      'https://romagustave10.github.io',
+      'https://visionary-meringue-9c1ece.netlify.app'
     ];
     
     if (!origin || allowedOrigins.includes(origin)) {
