@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST='{"components/admin/AdminLayout.js -> ../../components/ui/ThemeToggle":{"id":2673,"files":["static/chunks/673.7d2cff951636769a.js"]}}';
+self.__REACT_LOADABLE_MANIFEST="{\"components\\\\admin\\\\AdminLayout.js -> ../../components/ui/ThemeToggle\":{\"id\":\"components\\\\admin\\\\AdminLayout.js -> ../../components/ui/ThemeToggle\",\"files\":[\"static/chunks/components_ui_ThemeToggle_js.js\"]}}"
