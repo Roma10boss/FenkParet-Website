@@ -1,5 +1,5 @@
 // API Configuration for GitHub Pages deployment
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.railway.app';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com';
 
 export const apiConfig = {
   baseURL: API_BASE_URL,
@@ -7,6 +7,7 @@ export const apiConfig = {
     'Content-Type': 'application/json',
   },
   withCredentials: false, // Set to true if using cookies for auth
+  mode: 'cors', // Explicitly set CORS mode
 };
 
 // Complete API endpoints

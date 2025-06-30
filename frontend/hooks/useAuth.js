@@ -38,10 +38,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Verify token with server
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
         headers: {
-          'Authorization': `Bearer ${storedToken}`
-        }
+          'Authorization': `Bearer ${storedToken}`,
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
       });
 
       if (response.ok) {
@@ -72,11 +74,12 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('🔄 Attempting login for:', email);
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        mode: 'cors',
         body: JSON.stringify({ email, password }),
       });
 
