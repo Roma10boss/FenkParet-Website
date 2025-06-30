@@ -1,8 +1,8 @@
 {
-  "components\\admin\\AdminLayout.js -> ../../components/ui/ThemeToggle": {
-    "id": "components\\admin\\AdminLayout.js -> ../../components/ui/ThemeToggle",
+  "components/admin/AdminLayout.js -> ../../components/ui/ThemeToggle": {
+    "id": 2673,
     "files": [
-      "static/chunks/components_ui_ThemeToggle_js.js"
+      "static/chunks/673.7d2cff951636769a.js"
     ]
   }
 }
