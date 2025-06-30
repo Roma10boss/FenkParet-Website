@@ -82,8 +82,8 @@ const TicketModal = ({ ticket, onClose, onSubmit }) => {
       const submitData = { ...formData };
 
       const url = ticket 
-        ? `/api/admin/tickets/${ticket.id}`
-        : '/api/admin/tickets';
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/${ticket.id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets`;
       
       const method = ticket ? 'PUT' : 'POST';
 

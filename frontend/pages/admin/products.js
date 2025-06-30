@@ -41,7 +41,7 @@ const ProductsPage = () => {
         status: filterStatus
       });
 
-      const response = await fetch(`/api/admin/products?${params}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/products?${params}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -64,7 +64,7 @@ const ProductsPage = () => {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/categories', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/categories`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -81,7 +81,7 @@ const ProductsPage = () => {
 
   const handleProductAction = async (productId, action) => {
     try {
-      const response = await fetch(`/api/admin/products/${productId}/${action}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/products/${productId}/${action}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -115,7 +115,7 @@ const ProductsPage = () => {
     }
 
     try {
-      const response = await fetch('/api/admin/products/bulk', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/products/bulk`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

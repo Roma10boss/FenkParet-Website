@@ -22,7 +22,7 @@ const AnalyticsPage = () => {
     try {
       setAnalytics(prev => ({ ...prev, loading: true }));
       
-      const response = await fetch(`/api/admin/analytics?period=${dateRange}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/analytics?period=${dateRange}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -123,7 +123,7 @@ const AnalyticsPage = () => {
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{'export_analytics'}</h3>
         <div className="flex flex-wrap gap-3">
           <button
-            onClick={() => window.open('/api/admin/analytics/export?format=pdf', '_blank')}
+            onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/analytics/export?format=pdf`, '_blank')}
             className="flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

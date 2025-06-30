@@ -86,8 +86,8 @@ const UserModal = ({ user, onClose, onSubmit }) => {
       }
 
       const url = user 
-        ? `/api/admin/users/${user.id}`
-        : '/api/admin/users';
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/users/${user.id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/users`;
       
       const method = user ? 'PUT' : 'POST';
 

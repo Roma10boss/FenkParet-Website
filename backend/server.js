@@ -17,7 +17,9 @@ const io = socketIo(server, {
       process.env.FRONTEND_URL || "http://localhost:3000",
       "http://localhost:3000",
       "https://romagustave10.github.io",
-      "https://visionary-meringue-9c1ece.netlify.app"
+      "https://visionary-meringue-9c1ece.netlify.app",
+      "https://fenparet-website.web.app",
+      "https://fenparet-website.firebaseapp.com"
     ],
     methods: ["GET", "POST"],
     credentials: true

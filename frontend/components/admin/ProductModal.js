@@ -67,7 +67,7 @@ const ProductModal = ({ product, categories, onClose, onSubmit }) => {
         const formData = new FormData();
         formData.append('image', file);
         
-        const response = await fetch('/api/admin/upload', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -148,8 +148,8 @@ const ProductModal = ({ product, categories, onClose, onSubmit }) => {
       };
 
       const url = product 
-        ? `/api/admin/products/${product.id}`
-        : '/api/admin/products';
+        ? `${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/products/${product.id}`
+        : `${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/products`;
       
       const method = product ? 'PUT' : 'POST';
 

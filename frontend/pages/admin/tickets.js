@@ -72,7 +72,7 @@ const TicketsPage = () => {
         category: filterCategory
       });
 
-      const response = await fetch(`/api/admin/tickets?${params}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets?${params}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -95,7 +95,7 @@ const TicketsPage = () => {
 
   const fetchStats = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/tickets/stats', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/stats`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -112,7 +112,7 @@ const TicketsPage = () => {
 
   const updateTicketStatus = async (ticketId, newStatus) => {
     try {
-      const response = await fetch(`/api/admin/tickets/${ticketId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/${ticketId}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -136,7 +136,7 @@ const TicketsPage = () => {
 
   const assignTicket = async (ticketId, assigneeId) => {
     try {
-      const response = await fetch(`/api/admin/tickets/${ticketId}/assign`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/${ticketId}/assign`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -164,7 +164,7 @@ const TicketsPage = () => {
     }
 
     try {
-      const response = await fetch('/api/admin/tickets/bulk', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/bulk`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -281,7 +281,7 @@ const TicketsPage = () => {
           </div>
           <div className="flex space-x-3">
             <button
-              onClick={() => window.open('/api/admin/tickets/export', '_blank')}
+              onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/export`, '_blank')}
               className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
               Export Tickets

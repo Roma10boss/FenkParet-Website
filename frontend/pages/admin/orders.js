@@ -132,7 +132,7 @@ const OrdersPage = () => {
     }
 
     try {
-      const response = await fetch('/api/admin/orders/bulk-status', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/orders/bulk-status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -224,7 +224,7 @@ const OrdersPage = () => {
         format: 'csv'
       });
 
-      const response = await fetch(`/api/admin/orders/export?${params}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/orders/export?${params}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },

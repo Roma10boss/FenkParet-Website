@@ -58,7 +58,7 @@ export const SocketProvider = ({ children }) => {
 
     if (!socket) {
       console.log('Creating new socket connection...');
-      const newSocket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000', {
+      const newSocket = io(process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com', {
         autoConnect: false,
         query: { userId: user?._id || user?.id || '' }
       });
