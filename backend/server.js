@@ -13,7 +13,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:3000",
+      "http://localhost:3000",
+      "https://romagustave10.github.io"
+    ],
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -52,7 +56,8 @@ app.use(cors({
     const allowedOrigins = [
       process.env.FRONTEND_URL || 'http://localhost:3000',
       'http://localhost:3000',
-      'http://localhost:3001'
+      'http://localhost:3001',
+      'https://romagustave10.github.io'
     ];
     
     if (!origin || allowedOrigins.includes(origin)) {
