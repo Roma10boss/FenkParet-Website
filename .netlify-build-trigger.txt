@@ -1,0 +1,3 @@
+Build trigger: 2025-06-30-14:52:00
+Updated authentication endpoints to use /api/auth/login instead of /auth/login
+Fixed CORS configuration for Netlify deployment
