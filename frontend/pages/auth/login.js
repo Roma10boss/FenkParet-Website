@@ -21,7 +21,7 @@ import styles from './Login.module.css';
 
 export default function Login() {
   const router = useRouter();
-  const { login, register: authRegister, isAuthenticated, loading: authLoading, error: authError, clearError } = useAuth();
+  const { login, register: authRegister, isAuthenticated, loading: authLoading } = useAuth();
   const { mounted: themeMounted } = useTheme();
 
   const [isRegisterMode, setIsRegisterMode] = useState(false);
@@ -49,11 +49,9 @@ export default function Login() {
   }, [isAuthenticated, pageIsLoading, router, redirect]);
 
   useEffect(() => {
-    if (typeof clearError === 'function') clearError();
-    return () => {
-      if (typeof clearError === 'function') clearError();
-    };
-  }, [isRegisterMode, clearError]);
+    // Clear form when switching modes
+    reset();
+  }, [isRegisterMode, reset]);
 
   if (pageIsLoading) {
     return <LoadingPage message="Loading authentication..." />;
@@ -63,7 +61,6 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     setIsSubmittingForm(true);
-    if (typeof clearError === 'function') clearError();
 
     let result;
     if (isRegisterMode) {
@@ -162,11 +159,6 @@ export default function Login() {
                         <div className={`${styles.section} text-center`}>
                           <h4 className="mb-4 pb-3 text-theme-primary">Log In</h4>
 
-                          {authError && !isRegisterMode && (
-                            <div className="p-3 bg-error-light text-error-color rounded-md text-sm mb-4">
-                              <p>{authError}</p>
-                            </div>
-                          )}
 
                           <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="form-group mb-4 relative">
@@ -234,11 +226,6 @@ export default function Login() {
                         <div className={`${styles.section} text-center`}>
                           <h4 className="mb-4 pb-3 text-theme-primary">Sign Up</h4>
 
-                          {authError && isRegisterMode && (
-                            <div className="p-3 bg-error-light text-error-color rounded-md text-sm mb-4">
-                              <p>{authError}</p>
-                            </div>
-                          )}
 
                           <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="form-group mb-4 relative">
