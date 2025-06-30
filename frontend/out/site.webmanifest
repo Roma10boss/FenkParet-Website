@@ -1,0 +1,16 @@
+{
+  "name": "Fenkparet",
+  "short_name": "Fenk",
+  "description": "Fenkparet - Quality products for everyone",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b8d2b3",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "name": "Fenkparet",
+  "version": "1.0.0",
+  "description": "Fenkparet frontend with Next.js",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:static": "BUILD_STATIC=true next build",
+    "start": "next start",
+    "lint": "next lint --fix",
+    "export": "next export",
+    "deploy": "BUILD_STATIC=true next build",
+    "serve": "npx serve out"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.19",
+    "@heroicons/react": "^2.2.0",
+    "@tanstack/react-query": "^5.81.2",
+    "axios": "^1.5.0",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.4",
+    "js-cookie": "^3.0.5",
+    "next": "^14.0.0",
+    "next-themes": "^0.4.6",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.58.1",
+    "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
+    "react-image-gallery": "^1.3.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-intersection-observer": "^9.5.2",
+    "react-loading-skeleton": "^3.3.1",
+    "react-select": "^5.7.4",
+    "recharts": "^2.8.0",
+    "socket.io-client": "^4.8.1",
+    "tailwind-merge": "^1.14.0",
+    "zustand": "^4.4.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.21",
+    "cypress": "^14.5.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
