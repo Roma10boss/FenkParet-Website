@@ -56,17 +56,20 @@ app.use(cors({
       'https://fenparet-website.firebaseapp.com'
     ];
     
-    console.log('CORS Origin check:', origin, 'Allowed:', allowedOrigins.includes(origin));
+    console.log('CORS Origin check:', origin, 'Allowed:', !origin || allowedOrigins.includes(origin));
     
+    // Allow requests with no origin (mobile apps, server-to-server, some browser scenarios)
+    // and requests from allowed origins
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS BLOCKED:', origin, 'not in allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-Forwarded-For'],
   preflightContinue: false,
   optionsSuccessStatus: 200
 }));
