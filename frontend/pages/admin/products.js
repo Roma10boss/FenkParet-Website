@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import AdminLayout from '../../components/admin/AdminLayout';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
 import ProductModal from '../../components/admin/ProductModal';
@@ -195,19 +196,20 @@ const ProductsPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Product Management</h1>
-            <p className="text-gray-600">Manage your Fenkparet inventory and catalog</p>
+            <h1 className="text-2xl font-bold text-gray-900">Gestion des produits</h1>
+            <p className="text-gray-600">Gérez votre inventaire et catalogue Fenkparet</p>
           </div>
           <div className="flex space-x-3">
             <button
               onClick={() => router.push('/admin/categories')}
               className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
-              Manage Categories
+              Gérer les catégories
             </button>
             <button
               onClick={() => {
@@ -216,7 +218,7 @@ const ProductsPage = () => {
               }}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Add New Product
+              Ajouter un nouveau produit
             </button>
           </div>
         </div>
@@ -228,7 +230,7 @@ const ProductsPage = () => {
             <div className="md:col-span-2">
               <input
                 type="text"
-                placeholder="Search products by name or SKU..."
+                placeholder="Rechercher des produits par nom ou SKU..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -242,7 +244,7 @@ const ProductsPage = () => {
                 onChange={(e) => setFilterCategory(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">All Categories</option>
+                <option value="all">Toutes les catégories</option>
                 {categories.map(category => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -258,11 +260,11 @@ const ProductsPage = () => {
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="draft">Draft</option>
-                <option value="out-of-stock">Out of Stock</option>
+                <option value="all">Tous les statuts</option>
+                <option value="active">Actif</option>
+                <option value="inactive">Inactif</option>
+                <option value="draft">Brouillon</option>
+                <option value="out-of-stock">Rupture de stock</option>
               </select>
             </div>
 
@@ -541,6 +543,7 @@ const ProductsPage = () => {
           />
         )}
       </div>
+    </AdminLayout>
   );
 };
 

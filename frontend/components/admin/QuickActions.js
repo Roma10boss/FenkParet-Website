@@ -29,7 +29,7 @@ const ActionButton = ({ title, icon: Icon, onClick, loading, disabled }) => (
         <span className="text-lg">📊</span>
       )}
     </div>
-    <div className="font-medium">{loading ? 'Loading...' : title}</div>
+    <div className="font-medium">{loading ? 'Chargement...' : title}</div>
   </button>
 );
 
@@ -42,7 +42,8 @@ const QuickActions = () => {
     
     try {
       if (path) {
-        await router.push(path);
+        router.push(path);
+        return;
       } else {
         // Simulate async action for non-navigation actions
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -77,45 +78,45 @@ const QuickActions = () => {
         }
       }
     } catch (error) {
-      console.error('Action error:', error);
+      console.error('Erreur d\'action:', error);
     } finally {
-      setLoadingAction(null);
+      setTimeout(() => setLoadingAction(null), 1000);
     }
   };
 
   const actions = [
     { 
-      title: 'Manage Products', 
+      title: 'Gérer les produits', 
       icon: CubeIcon, 
       onClick: () => handleAction('products', '/admin/products'),
       type: 'products'
     },
     { 
-      title: 'View Orders', 
+      title: 'Voir les commandes', 
       icon: DocumentTextIcon, 
       onClick: () => handleAction('orders', '/admin/orders'),
       type: 'orders'
     },
     { 
-      title: 'Manage Users', 
+      title: 'Gérer les utilisateurs', 
       icon: UsersIcon, 
       onClick: () => handleAction('users', '/admin/users'),
       type: 'users'
     },
     { 
-      title: 'Support Tickets', 
+      title: 'Tickets de support', 
       icon: ChatBubbleLeftRightIcon, 
       onClick: () => handleAction('tickets', '/admin/tickets'),
       type: 'tickets'
     },
     { 
-      title: 'Export Data', 
+      title: 'Exporter les données', 
       icon: DocumentArrowDownIcon, 
       onClick: () => handleAction('export'),
       type: 'export'
     },
     { 
-      title: 'Generate Reports', 
+      title: 'Générer des rapports', 
       icon: DocumentChartBarIcon, 
       onClick: () => handleAction('reports'),
       type: 'reports'
@@ -124,7 +125,7 @@ const QuickActions = () => {
 
   return (
     <div className="admin-card">
-      <h3 className="text-xl font-semibold mb-6 text-theme-primary">Quick Actions</h3>
+      <h3 className="text-xl font-semibold mb-6 text-theme-primary">Actions rapides</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {actions.map((action, index) => (
           <ActionButton 

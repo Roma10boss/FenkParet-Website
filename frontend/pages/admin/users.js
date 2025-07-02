@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FiUsers, FiPlus, FiSearch, FiChevronDown, FiFilter, FiMoreVertical } from 'react-icons/fi';
+import AdminLayout from '../../components/admin/AdminLayout';
 import UserModal from '../../components/admin/UserModal';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
@@ -109,7 +110,8 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
@@ -292,6 +294,7 @@ const UsersPage = () => {
         />
       )}
     </div>
+    </AdminLayout>
   );
 };
 

@@ -15,7 +15,10 @@
       EnvelopeIcon,
       UsersIcon,
       BellIcon,
-      Cog6ToothIcon
+      Cog6ToothIcon,
+      ChartPieIcon,
+      ArchiveBoxIcon,
+      PresentationChartLineIcon
     } from '@heroicons/react/24/outline';
     
     // Fallback for ArrowRightOnRectangleIcon if it doesn't exist
@@ -98,11 +101,14 @@
       }, [showNotifications, showSettings]);
 
       const navItems = [
-        { name: 'Dashboard', href: '/admin/dashboard', icon: ChartBarIcon },
-        { name: 'Products', href: '/admin/products', icon: CubeIcon },
-        { name: 'Orders', href: '/admin/orders', icon: DocumentTextIcon },
+        { name: 'Tableau de bord', href: '/admin/dashboard', icon: ChartBarIcon },
+        { name: 'Produits', href: '/admin/products', icon: CubeIcon },
+        { name: 'Inventaire', href: '/admin/inventory', icon: ArchiveBoxIcon },
+        { name: 'Commandes', href: '/admin/orders', icon: DocumentTextIcon },
         { name: 'Tickets', href: '/admin/tickets', icon: EnvelopeIcon },
-        { name: 'Users', href: '/admin/users', icon: UsersIcon },
+        { name: 'Utilisateurs', href: '/admin/users', icon: UsersIcon },
+        { name: 'Analytics', href: '/admin/analytics', icon: ChartPieIcon },
+        { name: 'Ventes', href: '/admin/sales-analytics', icon: PresentationChartLineIcon },
       ];
 
       const handleLogout = () => {
@@ -116,7 +122,7 @@
           <div className="min-h-screen bg-theme-primary flex items-center justify-center">
             <div className="text-center">
               <div className="spinner w-12 h-12 mx-auto mb-4"></div>
-              <p className="text-theme-secondary">Loading dashboard...</p>
+              <p className="text-theme-secondary">Chargement du tableau de bord...</p>
             </div>
           </div>
         );
@@ -128,7 +134,7 @@
           <div className="min-h-screen bg-theme-primary flex items-center justify-center">
             <div className="text-center">
               <div className="spinner w-12 h-12 mx-auto mb-4"></div>
-              <p className="text-theme-secondary">Checking permissions...</p>
+              <p className="text-theme-secondary">Vérification des permissions...</p>
             </div>
           </div>
         );
@@ -157,7 +163,7 @@
                 <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
                   <ChartBarIcon className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold text-theme-primary">Admin Panel</span>
+                <span className="text-xl font-bold text-theme-primary">Panneau d&apos;administration</span>
               </Link>
               <button
                 onClick={() => setSidebarOpen(false)}

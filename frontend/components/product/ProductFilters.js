@@ -67,7 +67,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+    <div className="bg-theme-primary rounded-lg shadow-sm border border-theme">
       {/* Mobile Filter Toggle */}
       <div className="lg:hidden">
         <button
@@ -75,8 +75,8 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
           className="w-full flex items-center justify-between p-4 text-left"
         >
           <div className="flex items-center">
-            <FunnelIcon className="h-5 w-5 text-gray-500 mr-2" />
-            <span className="font-medium text-gray-900 dark:text-white">Filtres</span>
+            <FunnelIcon className="h-5 w-5 text-theme-secondary mr-2" />
+            <span className="font-medium text-theme-primary">Filtres</span>
             {hasActiveFilters() && (
               <span className="ml-2 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
                 Actifs
@@ -84,7 +84,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
             )}
           </div>
           <ChevronDownIcon 
-            className={`h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+            className={`h-5 w-5 text-theme-secondary transition-transform ${isOpen ? 'rotate-180' : ''}`} 
           />
         </button>
       </div>
@@ -93,8 +93,8 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
       <div className={`${isOpen ? 'block' : 'hidden'} lg:block p-4 space-y-6`}>
         {/* Clear All Filters */}
         {hasActiveFilters() && (
-          <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-700">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Filtres actifs</span>
+          <div className="flex justify-between items-center pb-2 border-b border-theme">
+            <span className="text-sm text-theme-secondary">Filtres actifs</span>
             <button
               onClick={clearAllFilters}
               className="flex items-center text-sm text-red-600 hover:text-red-700"
@@ -115,7 +115,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
             value={filters.search || ''}
             onChange={(e) => handleInputChange('search', e.target.value)}
             placeholder="Rechercher des produits..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-theme-border rounded-md bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
@@ -127,7 +127,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
           <select
             value={filters.category || ''}
             onChange={(e) => handleInputChange('category', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-theme-border rounded-md bg-theme-input text-theme-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           >
             <option value="">Toutes les catégories</option>
             {categories.map((category) => (
@@ -150,7 +150,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
                 value={filters.minPrice || ''}
                 onChange={(e) => handleInputChange('minPrice', e.target.value)}
                 placeholder="Min"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-theme-border rounded-md bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             </div>
             <div>
@@ -159,7 +159,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
                 value={filters.maxPrice || ''}
                 onChange={(e) => handleInputChange('maxPrice', e.target.value)}
                 placeholder="Max"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-theme-border rounded-md bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
 
         {/* Stock Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-theme-primary mb-3">
             Disponibilité
           </label>
           <div className="space-y-2">
@@ -218,9 +218,9 @@ const ProductFilters = ({ filters, onFilterChange, onClearAll }) => {
                 type="checkbox"
                 checked={filters.inStock !== false}
                 onChange={(e) => handleInputChange('inStock', e.target.checked ? undefined : false)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                className="w-4 h-4 text-accent bg-theme-input border-theme-border rounded focus:ring-accent focus:ring-2"
               />
-              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+              <span className="ml-2 text-sm text-theme-primary">
                 En stock
               </span>
             </label>

@@ -1,8 +1,8 @@
 // components/admin/DashboardStats.js
 import React from 'react';
 import { 
-  TrendingUpIcon, 
-  TrendingDownIcon,
+  ArrowUpIcon as TrendingUpIcon, 
+  ArrowDownIcon as TrendingDownIcon,
   CurrencyDollarIcon,
   DocumentTextIcon,
   UsersIcon,

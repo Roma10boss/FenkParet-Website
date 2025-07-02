@@ -301,7 +301,7 @@
     "description": "Découvrez des produits incroyables à des prix avantageux. Livraison rapide à travers Haïti.",
     "keywords": "commerce électronique, shopping, haiti, moncash, produits",
     "homeTitle": "Bienvenue chez Fenkparet",
-    "homeDescription": "Votre destination unique pour des produits de qualité d'Haïti.",
+    "homeDescription": "Votre marketplace de confiance pour des produits de qualité. Découvrez des produits exceptionnels à des prix abordables à travers Haïti.",
     "homeKeywords": "fenkparet, produits haïtiens, magasin en ligne, commerce électronique"
   },
   "loading": {
@@ -311,7 +311,7 @@
   },
   "home": {
     "welcomeTo": "Bienvenue chez",
-    "storeDescription": "Découvrez des produits incroyables à des prix avantageux chez Fenkparet. Des t-shirts personnalisés aux accessoires uniques, nous avons tout ce dont vous avez besoin avec une livraison rapide à travers Haïti.",
+    "storeDescription": "Votre marketplace de confiance pour des produits de qualité. Découvrez des produits exceptionnels à des prix abordables à travers Haïti.",
     "discoverProducts": "Découvrir les produits",
     "exploreCategories": "Explorez nos catégories",
     "categoriesDesc": "Trouvez exactement ce que vous cherchez dans une large gamme de catégories de produits.",
@@ -325,9 +325,9 @@
   },
   "features": {
     "freeShipping": "Livraison gratuite",
-    "freeShippingDesc": "Livraison gratuite sur les commandes de plus de 1000 HTG",
+    "freeShippingDesc": "Livraison gratuite pour les commandes de plus de 10000 HTG",
     "securePayment": "Paiement sécurisé",
-    "securePaymentDesc": "Paiement MonCash avec vérification administrative",
+    "securePaymentDesc": "Paiement sûrs et sécurisés avec vérification administrative pour votre tranquillité.",
     "qualityProducts": "Produits de qualité",
     "qualityProductsDesc": "Articles de qualité premium à des prix avantageux"
   },

@@ -26,7 +26,9 @@ const Header = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false); // State for notifications dropdown
+  const [searchQuery, setSearchQuery] = useState(''); // Search state
   const searchInputRef = useRef(null);
+  const mobileSearchInputRef = useRef(null);
   const notificationsRef = useRef(null); // Ref for notifications dropdown
 
   const router = useRouter(); // FIX: Initialize useRouter hook here
@@ -42,6 +44,27 @@ const Header = () => {
     await logout();
     toast.success('Déconnexion réussie!');
     router.push('/');
+  };
+
+  // Handle search functionality
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to products page with search query
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setShowSearchBar(false); // Close mobile search
+      setSearchQuery(''); // Clear search after navigation
+    }
+  };
+
+  const handleSearchInput = (value) => {
+    setSearchQuery(value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
   };
 
   // Handle click outside for notification dropdown
@@ -68,8 +91,10 @@ const Header = () => {
   ];
 
   useEffect(() => {
-    if (showSearchBar && searchInputRef.current) {
-      searchInputRef.current.focus();
+    if (showSearchBar && mobileSearchInputRef.current) {
+      setTimeout(() => {
+        mobileSearchInputRef.current.focus();
+      }, 100); // Small delay to ensure the element is rendered
     }
   }, [showSearchBar]);
 
@@ -122,14 +147,21 @@ const Header = () => {
           {/* Right section - Responsive spacing and proper flex handling */}
           <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 flex-shrink-0">
             {/* Desktop Search Bar - Responsive width */}
-            <div className="hidden lg:flex relative items-center w-48 xl:w-64">
-              <MagnifyingGlassIcon className="absolute left-3 h-5 w-5 text-theme-secondary" />
+            <form onSubmit={handleSearch} className="hidden lg:flex relative items-center w-48 xl:w-64">
+              <MagnifyingGlassIcon className="absolute left-3 h-5 w-5 text-theme-secondary pointer-events-none" />
               <input
+                ref={searchInputRef}
                 type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearchInput(e.target.value)}
+                onKeyPress={handleKeyPress}
                 placeholder="Rechercher..."
-                className="pl-10 pr-4 py-2 w-full rounded-md border border-theme-border bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm"
+                className="pl-10 pr-12 py-2 w-full rounded-md border border-theme-border bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm"
               />
-            </div>
+              <button type="submit" className="absolute right-2 p-1 text-theme-secondary hover:text-accent transition-colors">
+                <MagnifyingGlassIcon className="h-4 w-4" />
+              </button>
+            </form>
 
             {/* Mobile Search Toggle */}
             <button
@@ -302,15 +334,22 @@ const Header = () => {
         {/* Mobile Search Bar */}
         {showSearchBar && (
           <div className="lg:hidden p-4 border-t border-theme animate-fade-in-down">
-            <div className="relative flex items-center">
-              <MagnifyingGlassIcon className="absolute left-3 h-5 w-5 text-theme-secondary" />
+            <form onSubmit={handleSearch} className="relative flex items-center">
+              <MagnifyingGlassIcon className="absolute left-3 h-5 w-5 text-theme-secondary pointer-events-none" />
               <input
-                ref={searchInputRef}
+                ref={mobileSearchInputRef}
                 type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearchInput(e.target.value)}
+                onKeyPress={handleKeyPress}
                 placeholder="Rechercher..."
-                className="pl-10 pr-4 py-2 w-full rounded-md border border-theme-border bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                className="pl-10 pr-12 py-2 w-full rounded-md border border-theme-border bg-theme-input text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                autoFocus
               />
-            </div>
+              <button type="submit" className="absolute right-2 p-1 text-theme-secondary hover:text-accent transition-colors">
+                <MagnifyingGlassIcon className="h-4 w-4" />
+              </button>
+            </form>
           </div>
         )}
 

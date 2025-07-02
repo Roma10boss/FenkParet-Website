@@ -19,7 +19,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [filters, fetchProducts]);
+  }, [filters]);
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -42,7 +42,13 @@ const ProductsPage = () => {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to fetch products');
+        if (response.status === 429) {
+          throw new Error('Trop de requêtes. Veuillez patienter et réessayer.');
+        } else if (response.status >= 500) {
+          throw new Error('Erreur du serveur. Veuillez réessayer plus tard.');
+        } else {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
       }
       
       const data = await response.json();
@@ -94,8 +100,9 @@ const ProductsPage = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Erreur</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Erreur de connexion</h1>
+          <p className="text-theme-secondary mb-4">Impossible de charger les produits. Vérifiez votre connexion internet.</p>
+          <p className="text-sm text-theme-tertiary mb-4">Détails: {error}</p>
           <button 
             onClick={fetchProducts}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
@@ -129,13 +136,13 @@ const ProductsPage = () => {
             <div className="lg:w-3/4">
               {/* Results Summary */}
               <div className="mb-6 flex justify-between items-center">
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-theme-secondary">
                   {products.length} produits trouvés
                 </p>
                 
                 {/* Sort Options */}
                 <div className="flex items-center space-x-4">
-                  <label className="text-sm text-gray-600 dark:text-gray-400">
+                  <label className="text-sm text-theme-secondary">
                     Trier par:
                   </label>
                   <select 
@@ -144,7 +151,7 @@ const ProductsPage = () => {
                       const [sortBy, sortOrder] = e.target.value.split('-');
                       handleFilterChange({ sortBy, sortOrder });
                     }}
-                    className="border border-gray-300 dark:border-gray-600 rounded px-3 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    className="border border-theme-border rounded px-3 py-1 bg-theme-input text-theme-primary focus:outline-none focus:ring-2 focus:ring-accent"
                   >
                     <option value="name-asc">Nom A-Z</option>
                     <option value="name-desc">Nom Z-A</option>
@@ -161,10 +168,10 @@ const ProductsPage = () => {
               {products.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🛍️</div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-xl font-semibold text-theme-primary mb-2">
                     Aucun produit trouvé
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-theme-secondary mb-4">
                     Essayez d&apos;ajuster vos filtres ou termes de recherche
                   </p>
                   <button 
@@ -176,7 +183,7 @@ const ProductsPage = () => {
                       sortBy: 'name',
                       sortOrder: 'asc'
                     })}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                    className="btn-primary"
                   >
                     Effacer les filtres
                   </button>

@@ -1,6 +1,7 @@
 // pages/admin/tickets.js
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import AdminLayout from '../../components/admin/AdminLayout';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
 import TicketModal from '../../components/admin/TicketModal';
@@ -31,28 +32,28 @@ const TicketsPage = () => {
   const ticketsPerPage = 15;
 
   const ticketStatuses = [
-    { value: 'open', label: 'Open', color: 'red' },
-    { value: 'in_progress', label: 'In Progress', color: 'yellow' },
-    { value: 'waiting_customer', label: 'Waiting for Customer', color: 'blue' },
-    { value: 'resolved', label: 'Resolved', color: 'green' },
-    { value: 'closed', label: 'Closed', color: 'gray' }
+    { value: 'open', label: 'Ouvert', color: 'red' },
+    { value: 'in_progress', label: 'En cours', color: 'yellow' },
+    { value: 'waiting_customer', label: 'En attente client', color: 'blue' },
+    { value: 'resolved', label: 'Résolu', color: 'green' },
+    { value: 'closed', label: 'Fermé', color: 'gray' }
   ];
 
   const ticketPriorities = [
-    { value: 'low', label: 'Low', color: 'gray' },
-    { value: 'medium', label: 'Medium', color: 'yellow' },
-    { value: 'high', label: 'High', color: 'orange' },
-    { value: 'urgent', label: 'Urgent', color: 'red' }
+    { value: 'low', label: 'Faible', color: 'gray' },
+    { value: 'medium', label: 'Moyenne', color: 'yellow' },
+    { value: 'high', label: 'Élevée', color: 'orange' },
+    { value: 'urgent', label: 'Urgente', color: 'red' }
   ];
 
   const ticketCategories = [
-    { value: 'technical', label: 'Technical Issue' },
-    { value: 'billing', label: 'Billing' },
-    { value: 'account', label: 'Account' },
-    { value: 'product', label: 'Product Inquiry' },
-    { value: 'shipping', label: 'Shipping' },
-    { value: 'return', label: 'Return/Refund' },
-    { value: 'other', label: 'Other' }
+    { value: 'technical', label: 'Problème technique' },
+    { value: 'billing', label: 'Facturation' },
+    { value: 'account', label: 'Compte' },
+    { value: 'product', label: 'Demande produit' },
+    { value: 'shipping', label: 'Livraison' },
+    { value: 'return', label: 'Retour/Remboursement' },
+    { value: 'other', label: 'Autre' }
   ];
 
   useEffect(() => {
@@ -159,7 +160,7 @@ const TicketsPage = () => {
 
   const handleBulkAction = async (action) => {
     if (selectedTickets.length === 0) {
-      showWarning('Please select tickets to perform bulk action');
+      showWarning('Veuillez sélectionner des tickets pour effectuer une action groupée');
       return;
     }
 
@@ -180,13 +181,49 @@ const TicketsPage = () => {
         throw new Error(`Failed to perform bulk ${action}`);
       }
 
-      showSuccess(`Bulk ${action} completed successfully`);
+      const actionLabels = {
+        'close': 'fermeture',
+        'assign': 'assignation',
+        'priority_high': 'priorité élevée',
+        'priority_low': 'priorité faible'
+      };
+
+      showSuccess(`${actionLabels[action] || action} groupée terminée avec succès`);
       setSelectedTickets([]);
       fetchTickets();
       fetchStats();
     } catch (error) {
       console.error(`Error performing bulk ${action}:`, error);
-      showError(`Failed to perform bulk ${action}. Please try again.`);
+      showError(`Échec de l&apos;action groupée ${actionLabels[action] || action}. Veuillez réessayer.`);
+    }
+  };
+
+  // Auto-close resolved tickets after 7 days
+  const autoCloseResolvedTickets = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/auto-close`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          daysAfterResolved: 7
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to auto-close tickets');
+      }
+
+      const data = await response.json();
+      if (data.closedCount > 0) {
+        showSuccess(`${data.closedCount} tickets résolus fermés automatiquement`);
+        fetchTickets();
+        fetchStats();
+      }
+    } catch (error) {
+      console.error('Error auto-closing tickets:', error);
     }
   };
 
@@ -272,7 +309,8 @@ const TicketsPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -281,10 +319,16 @@ const TicketsPage = () => {
           </div>
           <div className="flex space-x-3">
             <button
+              onClick={autoCloseResolvedTickets}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Fermeture automatique
+            </button>
+            <button
               onClick={() => window.open(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/tickets/export`, '_blank')}
               className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
-              Export Tickets
+              Exporter les tickets
             </button>
             <button
               onClick={() => {
@@ -293,7 +337,7 @@ const TicketsPage = () => {
               }}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Create Ticket
+              Créer un ticket
             </button>
           </div>
         </div>
@@ -471,11 +515,11 @@ const TicketsPage = () => {
                   }}
                   className="text-sm border border-blue-300 rounded px-2 py-1"
                 >
-                  <option value="">Bulk Actions</option>
-                  <option value="close">Close Tickets</option>
-                  <option value="assign">Assign to Me</option>
-                  <option value="priority_high">Set High Priority</option>
-                  <option value="priority_low">Set Low Priority</option>
+                  <option value="">Actions groupées</option>
+                  <option value="close">Fermer les tickets</option>
+                  <option value="assign">M&apos;assigner</option>
+                  <option value="priority_high">Priorité élevée</option>
+                  <option value="priority_low">Priorité faible</option>
                 </select>
               </div>
             </div>
@@ -595,9 +639,15 @@ const TicketsPage = () => {
                       </button>
                       <button
                         onClick={() => updateTicketStatus(ticket.id, 'resolved')}
-                        className="text-green-600 hover:text-green-900"
+                        className="text-green-600 hover:text-green-900 mr-3"
                       >
-                        Resolve
+                        Résoudre
+                      </button>
+                      <button
+                        onClick={() => updateTicketStatus(ticket.id, 'closed')}
+                        className="text-gray-600 hover:text-gray-900"
+                      >
+                        Fermer
                       </button>
                     </td>
                   </tr>
@@ -635,6 +685,7 @@ const TicketsPage = () => {
           />
         )}
       </div>
+    </AdminLayout>
   );
 };
 

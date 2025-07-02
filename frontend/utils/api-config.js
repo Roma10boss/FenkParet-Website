@@ -72,8 +72,8 @@ export const apiEndpoints = {
     settings: `${API_BASE_URL}/api/admin/settings`,
   },
   
-  // Feedback (for testing)
-  feedback: `${API_BASE_URL}/api/feedback`,
+  // Feedback (creates tickets in admin system)
+  feedback: `${API_BASE_URL}/api/tickets`,
 };
 
 // Helper function to make API requests
@@ -196,12 +196,36 @@ export const api = {
       body: productData, // FormData for file uploads
     }),
     
-  // Feedback
-  submitFeedback: (feedbackData) =>
-    apiRequest(apiEndpoints.feedback, {
+  // Feedback (creates support tickets)
+  submitFeedback: (feedbackData) => {
+    // Transform feedback data into ticket format
+    const ticketData = {
+      subject: `Feedback: ${feedbackData.type.charAt(0).toUpperCase() + feedbackData.type.slice(1)}`,
+      description: feedbackData.message,
+      category: feedbackData.type === 'bug' ? 'technical' : 
+                feedbackData.type === 'payment' ? 'billing' : 
+                feedbackData.type === 'feature' ? 'other' : 'technical',
+      priority: feedbackData.rating <= 2 ? 'high' : 
+                feedbackData.rating <= 3 ? 'medium' : 'low',
+      customerName: 'Utilisateur Anonyme',
+      customerEmail: feedbackData.email || 'noreply@fenkparet.com',
+      source: 'feedback_widget',
+      metadata: {
+        rating: feedbackData.rating,
+        userAgent: feedbackData.userAgent,
+        page: feedbackData.page,
+        url: feedbackData.url,
+        screenSize: feedbackData.screenSize,
+        viewportSize: feedbackData.viewportSize,
+        timestamp: feedbackData.timestamp
+      }
+    };
+    
+    return apiRequest(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/tickets`, {
       method: 'POST',
-      body: JSON.stringify(feedbackData),
-    }),
+      body: JSON.stringify(ticketData),
+    });
+  },
 };
 
 export default api;

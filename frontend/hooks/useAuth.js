@@ -74,7 +74,10 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('🔄 Attempting login for:', email);
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/auth/login`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com';
+      console.log('🌐 API URL:', apiUrl);
+      
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,6 +86,8 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('📡 Response status:', response.status, response.statusText);
+      
       const data = await response.json();
       console.log('📡 Login response:', data);
 
@@ -97,18 +102,49 @@ export const AuthProvider = ({ children }) => {
         
         return { success: true, user: data.user };
       } else {
-        console.log('❌ Login failed:', data.message);
-        return { success: false, error: data.message || 'Login failed' };
+        console.log('❌ Login failed:', response.status, data.message);
+        if (response.status === 429) {
+          return { success: false, error: 'Trop de tentatives. Veuillez patienter quelques minutes et réessayer.' };
+        } else if (response.status >= 500) {
+          return { success: false, error: 'Erreur du serveur. Le service est temporairement indisponible.' };
+        } else {
+          return { success: false, error: data.message || 'Identifiants incorrects.' };
+        }
       }
     } catch (error) {
       console.error('❌ Login error:', error);
-      return { success: false, error: 'Network error. Please try again.' };
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        // Backend is unreachable - check for demo credentials
+        if (email === 'demo@fenkparet.com' && password === 'demo123') {
+          console.log('🎭 Using demo user (backend unavailable)');
+          const demoUser = {
+            _id: 'demo123',
+            name: 'Utilisateur Démo',
+            email: 'demo@fenkparet.com',
+            isAdmin: false,
+            role: 'customer'
+          };
+          localStorage.setItem('user', JSON.stringify(demoUser));
+          localStorage.setItem('token', 'demo-token-123');
+          setToken('demo-token-123');
+          setUser(demoUser);
+          return { success: true, user: demoUser };
+        }
+        return { success: false, error: 'Impossible de se connecter au serveur. Essayez avec demo@fenkparet.com / demo123 pour tester.' };
+      }
+      return { success: false, error: 'Erreur de connexion. Veuillez réessayer.' };
     }
   };
 
   const register = async (userData) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/auth/register`, {
+      console.log('🔄 Attempting registration for:', userData.email);
+      console.log('📋 Registration data:', { ...userData, password: '[HIDDEN]' });
+      
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com';
+      console.log('🌐 API URL:', apiUrl);
+      
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,20 +153,36 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify(userData),
       });
 
+      console.log('📡 Response status:', response.status, response.statusText);
+      
       const data = await response.json();
+      console.log('📡 Register response:', data);
 
       if (response.ok && data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setToken(data.token);
         setUser(data.user);
+        console.log('✅ Registration successful:', data.user);
         return { success: true, user: data.user };
       } else {
-        return { success: false, error: data.message || 'Registration failed' };
+        console.log('❌ Registration failed:', response.status, data.message);
+        if (response.status === 429) {
+          return { success: false, error: 'Trop de tentatives. Veuillez patienter quelques minutes et réessayer.' };
+        } else if (response.status >= 500) {
+          return { success: false, error: 'Erreur du serveur. Le service est temporairement indisponible.' };
+        } else if (response.status === 400) {
+          return { success: false, error: data.message || 'Données invalides. Vérifiez vos informations.' };
+        } else {
+          return { success: false, error: data.message || 'Échec de l\'inscription.' };
+        }
       }
     } catch (error) {
-      console.error('Register error:', error);
-      return { success: false, error: 'Network error. Please try again.' };
+      console.error('❌ Register error:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        return { success: false, error: 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.' };
+      }
+      return { success: false, error: 'Erreur de connexion. Veuillez réessayer.' };
     }
   };
 

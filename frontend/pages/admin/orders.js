@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import AdminLayout from '../../components/admin/AdminLayout';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
 import OrderModal from '../../components/admin/OrderModal';
@@ -25,20 +26,20 @@ const OrdersPage = () => {
   const ordersPerPage = 15;
 
   const orderStatuses = [
-    { value: 'pending', label: 'Pending', color: 'yellow' },
-    { value: 'confirmed', label: 'Confirmed', color: 'blue' },
-    { value: 'processing', label: 'Processing', color: 'indigo' },
-    { value: 'shipped', label: 'Shipped', color: 'purple' },
-    { value: 'delivered', label: 'Delivered', color: 'green' },
-    { value: 'cancelled', label: 'Cancelled', color: 'red' },
-    { value: 'refunded', label: 'Refunded', color: 'gray' }
+    { value: 'pending', label: 'En attente', color: 'yellow' },
+    { value: 'confirmed', label: 'Confirmée', color: 'blue' },
+    { value: 'processing', label: 'En cours', color: 'indigo' },
+    { value: 'shipped', label: 'Expédiée', color: 'purple' },
+    { value: 'delivered', label: 'Livrée', color: 'green' },
+    { value: 'cancelled', label: 'Annulée', color: 'red' },
+    { value: 'refunded', label: 'Remboursée', color: 'gray' }
   ];
 
   const paymentStatuses = [
-    { value: 'pending', label: 'Pending', color: 'yellow' },
-    { value: 'paid', label: 'Paid', color: 'green' },
-    { value: 'failed', label: 'Failed', color: 'red' },
-    { value: 'refunded', label: 'Refunded', color: 'gray' }
+    { value: 'pending', label: 'En attente', color: 'yellow' },
+    { value: 'paid', label: 'Payée', color: 'green' },
+    { value: 'failed', label: 'Échouée', color: 'red' },
+    { value: 'refunded', label: 'Remboursée', color: 'gray' }
   ];
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const OrdersPage = () => {
         endDate: dateRange.end
       });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders?${params}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/orders?${params}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -73,7 +74,7 @@ const OrdersPage = () => {
       setTotalPages(Math.ceil(data.total / ordersPerPage));
     } catch (error) {
       console.error('Error fetching orders:', error);
-      showError('Failed to fetch orders. Please try again.');
+      showError('Échec du chargement des commandes. Veuillez réessayer.');
     } finally {
       setLoading(false);
     }
@@ -260,7 +261,8 @@ const OrdersPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -639,6 +641,7 @@ const OrdersPage = () => {
           />
         )}
       </div>
+    </AdminLayout>
   );
 };
 

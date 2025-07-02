@@ -76,7 +76,7 @@ export default function Login() {
       }
 
       const registerData = {
-        fullName: data.fullName,
+        name: data.fullName,
         email: data.email,
         password: data.password,
       };

@@ -210,7 +210,15 @@ export default function Home() {
           
         } catch (error) {
           console.error('Error fetching data:', error);
-          toast.error('Échec du chargement des données.');
+          
+          // More specific error messages
+          if (error.response?.status === 429) {
+            toast.error('Trop de requêtes. Utilisation des données en cache.');
+          } else if (error.code === 'NETWORK_ERROR' || !navigator.onLine) {
+            toast.error('Pas de connexion internet. Utilisation des données hors ligne.');
+          } else {
+            toast.error('Serveur temporairement indisponible. Utilisation des données en cache.');
+          }
           
           // Fallback to mock data if API fails
           const mockFeatured = [
@@ -254,12 +262,12 @@ export default function Home() {
     {
       icon: TruckIcon,
       title: 'Livraison gratuite',
-      description: 'Livraison gratuite pour les commandes de plus de 1000 HTG'
+      description: 'Livraison gratuite pour les commandes de plus de 10000 HTG'
     },
     {
       icon: ShieldCheckIcon,
       title: 'Paiement sécurisé',
-      description: 'Paiement MonCash avec vérification administrateur'
+      description: 'Paiement sûrs et sécurisés avec vérification administrative pour votre tranquillité.'
     },
     {
       icon: StarIcon, 
@@ -305,7 +313,7 @@ export default function Home() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-theme-secondary mb-10 max-w-3xl mx-auto animate-fade-in-up delay-200">
-            Votre marketplace de confiance pour des produits haïtiens de qualité. Découvrez des produits exceptionnels à des prix abordables avec une livraison rapide à travers Haïti.
+            Votre marketplace de confiance pour des produits de qualité. Découvrez des produits exceptionnels à des prix abordables à travers Haïti.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-400">
             <Link

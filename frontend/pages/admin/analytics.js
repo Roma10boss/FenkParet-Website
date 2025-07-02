@@ -1,6 +1,7 @@
 // pages/admin/analytics.js
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import AdminLayout from '../../components/admin/AdminLayout';
 import Card from '../../components/admin/Card';
 import DashboardStats from '../../components/admin/DashboardStats';
 import Charts from '../../components/admin/Charts';
@@ -53,7 +54,8 @@ const AnalyticsPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -143,7 +145,8 @@ const AnalyticsPage = () => {
           </button>
         </div>
       </Card>
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 
