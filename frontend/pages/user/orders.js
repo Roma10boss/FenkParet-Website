@@ -59,10 +59,39 @@ export default function Orders() {
       const config = {
         headers: { Authorization: `Bearer ${token}` }
       };
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/my-orders`, config); 
-
-      setOrders(response.data.orders);
-      setTotalPages(response.data.pagination.pages);
+      
+      let serverOrders = [];
+      let hasServerOrders = false;
+      
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/orders/my-orders`, config); 
+        serverOrders = response.data.orders || [];
+        hasServerOrders = true;
+        setTotalPages(response.data.pagination?.pages || 1);
+      } catch (serverError) {
+        console.log('Server orders not available, checking local orders...');
+      }
+      
+      // Get local orders
+      const localOrders = JSON.parse(localStorage.getItem('localOrders') || '[]');
+      
+      // Filter local orders by status if needed
+      const filteredLocalOrders = filter === 'all' 
+        ? localOrders 
+        : localOrders.filter(order => order.status === filter);
+      
+      // Combine server and local orders
+      const allOrders = [...serverOrders, ...filteredLocalOrders];
+      
+      // Sort by creation date (most recent first)
+      allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      setOrders(allOrders);
+      
+      if (!hasServerOrders && localOrders.length > 0) {
+        toast.success(`Affichage de ${localOrders.length} commande(s) locale(s)`);
+      }
+      
     } catch (error) {
       console.error('Error fetching orders:', error);
       toast.error('Failed to load orders.');

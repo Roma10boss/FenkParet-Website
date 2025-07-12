@@ -144,8 +144,13 @@ export default function Profile() {
       return;
     }
 
-    if (passwordForm.newPassword.length < 6) {
-      toast.error('Password must be at least 6 characters long!');
+    if (passwordForm.newPassword.length < 8) {
+      toast.error('Le mot de passe doit contenir au moins 8 caractères.');
+      return;
+    }
+
+    if (!/[A-Z]/.test(passwordForm.newPassword)) {
+      toast.error('Le mot de passe doit contenir au moins une lettre majuscule.');
       return;
     }
 

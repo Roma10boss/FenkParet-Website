@@ -61,6 +61,12 @@ const UserModal = ({ user, onClose, onSubmit }) => {
 
     if (!user && !formData.password) {
       newErrors.password = 'Password is required';
+    } else if (!user && formData.password) {
+      if (formData.password.length < 8) {
+        newErrors.password = 'Le mot de passe doit contenir au moins 8 caractères.';
+      } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = 'Le mot de passe doit contenir au moins une lettre majuscule.';
+      }
     }
 
     if (!user && formData.password !== formData.confirmPassword) {

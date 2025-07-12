@@ -6,4 +6,4 @@
                         page_title: document.title,
                         page_location: window.location.href,
                       });
-                    `}})]})})]})]})}},2785:e=>{e.exports=require("next/dist/compiled/next-server/pages.runtime.prod.js")},6689:e=>{e.exports=require("react")},997:e=>{e.exports=require("react/jsx-runtime")},5315:e=>{e.exports=require("path")}};var t=require("../webpack-runtime.js");t.C(e);var n=e=>t(t.s=e),s=t.X(0,[567,859],()=>n(5949));module.exports=s})();
+                    `}})]})})]})]})}},2785:e=>{e.exports=require("next/dist/compiled/next-server/pages.runtime.prod.js")},6689:e=>{e.exports=require("react")},997:e=>{e.exports=require("react/jsx-runtime")},5315:e=>{e.exports=require("path")}};var t=require("../webpack-runtime.js");t.C(e);var n=e=>t(t.s=e),s=t.X(0,[216],()=>n(5949));module.exports=s})();

@@ -21,6 +21,9 @@ const ProductModal = ({ product, categories, onClose, onSubmit }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showCreateCategory, setShowCreateCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [creatingCategory, setCreatingCategory] = useState(false);
   const { showSuccess, showError } = useAlert();
 
   useEffect(() => {
@@ -54,6 +57,52 @@ const ProductModal = ({ product, categories, onClose, onSubmit }) => {
         ...prev,
         [name]: ''
       }));
+    }
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) {
+      showError('Category name is required');
+      return;
+    }
+
+    setCreatingCategory(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/admin/categories`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: newCategoryName.trim(),
+          slug: newCategoryName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create category');
+      }
+
+      const newCategory = await response.json();
+      showSuccess('Category created successfully');
+      
+      // Add new category to the list and select it
+      categories.push(newCategory);
+      setFormData(prev => ({
+        ...prev,
+        categoryId: newCategory.id
+      }));
+      
+      // Reset the form
+      setNewCategoryName('');
+      setShowCreateCategory(false);
+      
+    } catch (error) {
+      console.error('Error creating category:', error);
+      showError('Failed to create category. Please try again.');
+    } finally {
+      setCreatingCategory(false);
     }
   };
 
@@ -311,21 +360,64 @@ const ProductModal = ({ product, categories, onClose, onSubmit }) => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Category *
                   </label>
-                  <select
-                    name="categoryId"
-                    value={formData.categoryId}
-                    onChange={handleChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                      errors.categoryId ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map(category => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex gap-2">
+                    <select
+                      name="categoryId"
+                      value={formData.categoryId}
+                      onChange={handleChange}
+                      className={`flex-1 px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        errors.categoryId ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map(category => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateCategory(!showCreateCategory)}
+                      className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 whitespace-nowrap"
+                    >
+                      + New
+                    </button>
+                  </div>
+                  
+                  {showCreateCategory && (
+                    <div className="mt-2 p-3 border border-gray-200 rounded-md bg-gray-50">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newCategoryName}
+                          onChange={(e) => setNewCategoryName(e.target.value)}
+                          placeholder="Enter new category name"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          onKeyPress={(e) => e.key === 'Enter' && handleCreateCategory()}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleCreateCategory}
+                          disabled={creatingCategory}
+                          className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
+                        >
+                          {creatingCategory ? 'Creating...' : 'Create'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowCreateCategory(false);
+                            setNewCategoryName('');
+                          }}
+                          className="px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  
                   {errors.categoryId && <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>}
                 </div>
 

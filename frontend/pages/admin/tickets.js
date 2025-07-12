@@ -1,7 +1,6 @@
 // pages/admin/tickets.js
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import AdminLayout from '../../components/admin/AdminLayout';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
 import TicketModal from '../../components/admin/TicketModal';
@@ -59,7 +58,7 @@ const TicketsPage = () => {
   useEffect(() => {
     fetchTickets();
     fetchStats();
-  }, [fetchTickets, fetchStats]);
+  }, [currentPage, searchTerm, filterStatus, filterPriority, filterCategory]);
 
   const fetchTickets = useCallback(async () => {
     try {
@@ -309,8 +308,7 @@ const TicketsPage = () => {
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -685,8 +683,7 @@ const TicketsPage = () => {
           />
         )}
       </div>
-    </AdminLayout>
-  );
+      );
 };
 
 export default TicketsPage;

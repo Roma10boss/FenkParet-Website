@@ -62,8 +62,14 @@ export default function AdminLogin() {
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+    if (password.length < 8) {
+      setError('Le mot de passe doit contenir au moins 8 caractères.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      setError('Le mot de passe doit contenir au moins une lettre majuscule.');
       setIsSubmitting(false);
       return;
     }
@@ -300,8 +306,8 @@ export default function AdminLogin() {
                     Development Mode - Demo Credentials
                   </h3>
                   <div className="mt-2 text-sm text-blue-700 dark:text-blue-300">
-                    <p><strong>Email:</strong> Admin@fenkparet.com</p>
-                    <p><strong>Password:</strong> Adnmin123!</p>
+                    <p><strong>Email:</strong> admin@fenkparet.com</p>
+                    <p><strong>Password:</strong> Admin123!</p>
                     <p className="text-xs mt-1 text-blue-600 dark:text-blue-400">
                       (Make sure your backend is running and admin user exists)
                     </p>

@@ -187,9 +187,13 @@ const Checkout = () => {
         totalAmount: totals.total, // Ensure total amount is sent
       };
 
-      // Axios POST request to your API route
-      // The API route should handle authentication server-side if needed.
-      const response = await axios.post('/api/cart/checkout', orderData); // Updated path to local API route
+      // API POST request to the backend
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'https://fenkparet-backend.onrender.com'}/api/orders/checkout`, orderData, {
+        headers: {
+          'Authorization': localStorage.getItem('token') ? `Bearer ${localStorage.getItem('token')}` : '',
+          'Content-Type': 'application/json'
+        }
+      });
 
       setOrderResult(response.data.order);
       clearCart(); // Clear cart after successful order

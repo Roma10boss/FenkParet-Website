@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import AdminLayout from '../../components/admin/AdminLayout';
 import { useAuth } from '../../hooks/useAuth';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
@@ -271,12 +270,10 @@ const InventoryManagement = () => {
 
   if (authLoading || loading) {
     return (
-      <AdminLayout>
-        <div className="flex items-center justify-center h-64">
+              <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
-      </AdminLayout>
-    );
+          );
   }
 
   return (
@@ -286,8 +283,7 @@ const InventoryManagement = () => {
         <meta name="description" content="Gérez l'inventaire et les stocks des produits" />
       </Head>
 
-      <AdminLayout>
-        <div className="space-y-6">
+              <div className="space-y-6">
           {/* Header */}
           <div className="flex justify-between items-center">
             <div>
@@ -577,8 +573,7 @@ const InventoryManagement = () => {
             />
           )}
         </div>
-      </AdminLayout>
-    </>
+          </>
   );
 };
 

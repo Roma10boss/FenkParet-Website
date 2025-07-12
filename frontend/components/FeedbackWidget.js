@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   ChatBubbleLeftEllipsisIcon, 
   XMarkIcon,
   PaperAirplaneIcon,
-  StarIcon
+  StarIcon,
+  UsersIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { api } from '../utils/api-config';
@@ -11,6 +12,7 @@ import { toast } from 'react-hot-toast';
 
 const FeedbackWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showRatings, setShowRatings] = useState(false);
   const [feedback, setFeedback] = useState({
     type: 'general',
     message: '',
@@ -19,6 +21,52 @@ const FeedbackWidget = () => {
     hoverRating: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customerStats, setCustomerStats] = useState({
+    totalRatings: 0,
+    averageRating: 4.7,
+    visitorCount: 1000,
+    ratingDistribution: [2, 3, 8, 35, 52] // 1-5 stars percentages
+  });
+
+  useEffect(() => {
+    // Load existing feedback data and update stats
+    const loadCustomerStats = () => {
+      const existingFeedback = JSON.parse(localStorage.getItem('customerFeedback') || '[]');
+      const currentVisitorCount = parseInt(localStorage.getItem('visitorCount') || '1000');
+      
+      if (existingFeedback.length > 0) {
+        const totalRatings = existingFeedback.length;
+        const averageRating = existingFeedback.reduce((sum, f) => sum + f.rating, 0) / totalRatings;
+        
+        // Calculate rating distribution
+        const distribution = [0, 0, 0, 0, 0]; // 1-5 stars
+        existingFeedback.forEach(f => {
+          if (f.rating >= 1 && f.rating <= 5) {
+            distribution[f.rating - 1]++;
+          }
+        });
+        
+        // Convert to percentages
+        const percentDistribution = distribution.map(count => 
+          totalRatings > 0 ? Math.round((count / totalRatings) * 100) : 0
+        );
+        
+        setCustomerStats({
+          totalRatings,
+          averageRating: Math.round(averageRating * 10) / 10,
+          visitorCount: currentVisitorCount,
+          ratingDistribution: percentDistribution
+        });
+      } else {
+        // Update visitor count for new visitor
+        const newCount = currentVisitorCount + 1;
+        localStorage.setItem('visitorCount', newCount.toString());
+        setCustomerStats(prev => ({ ...prev, visitorCount: newCount }));
+      }
+    };
+
+    loadCustomerStats();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +89,39 @@ const FeedbackWidget = () => {
         viewportSize: `${window.innerWidth}x${window.innerHeight}`,
       };
 
-      await api.submitFeedback(feedbackData);
+      // Store feedback locally
+      const existingFeedback = JSON.parse(localStorage.getItem('customerFeedback') || '[]');
+      existingFeedback.push(feedbackData);
+      localStorage.setItem('customerFeedback', JSON.stringify(existingFeedback));
+
+      // Update customer stats
+      const totalRatings = existingFeedback.length;
+      const averageRating = existingFeedback.reduce((sum, f) => sum + f.rating, 0) / totalRatings;
+      
+      const distribution = [0, 0, 0, 0, 0];
+      existingFeedback.forEach(f => {
+        if (f.rating >= 1 && f.rating <= 5) {
+          distribution[f.rating - 1]++;
+        }
+      });
+      
+      const percentDistribution = distribution.map(count => 
+        Math.round((count / totalRatings) * 100)
+      );
+      
+      setCustomerStats(prev => ({
+        ...prev,
+        totalRatings,
+        averageRating: Math.round(averageRating * 10) / 10,
+        ratingDistribution: percentDistribution
+      }));
+
+      // Try to send to backend if available
+      try {
+        await api.submitFeedback(feedbackData);
+      } catch (serverError) {
+        console.log('Server not available, feedback stored locally');
+      }
       
       toast.success('Merci pour vos commentaires! 🙏');
       setFeedback({
@@ -63,8 +143,21 @@ const FeedbackWidget = () => {
 
   return (
     <>
-      {/* Feedback Button */}
-      <div className="fixed bottom-4 right-4 z-50">
+      {/* Widget Buttons */}
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col space-y-3">
+        {/* Ratings Display Button */}
+        {customerStats.totalRatings > 0 && (
+          <button
+            onClick={() => setShowRatings(!showRatings)}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-full text-sm font-medium shadow-lg transition-all duration-200 flex items-center space-x-2"
+            aria-label="Voir les évaluations"
+          >
+            <StarIconSolid className="h-4 w-4" />
+            <span>{customerStats.averageRating}/5 ({customerStats.totalRatings})</span>
+          </button>
+        )}
+        
+        {/* Feedback Button */}
         <button
           onClick={() => setIsOpen(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110"
@@ -73,6 +166,62 @@ const FeedbackWidget = () => {
           <ChatBubbleLeftEllipsisIcon className="h-6 w-6" />
         </button>
       </div>
+
+      {/* Ratings Display Modal */}
+      {showRatings && (
+        <div className="fixed bottom-20 right-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 w-64 border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="font-semibold text-gray-900 dark:text-white">Évaluations Clients</h4>
+              <button
+                onClick={() => setShowRatings(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <XMarkIcon className="h-4 w-4" />
+              </button>
+            </div>
+            
+            {/* Average Rating */}
+            <div className="flex items-center space-x-2 mb-3">
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <StarIconSolid
+                    key={star}
+                    className={`h-5 w-5 ${
+                      star <= Math.round(customerStats.averageRating)
+                        ? 'text-yellow-400'
+                        : 'text-gray-300 dark:text-gray-600'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">
+                {customerStats.averageRating}
+              </span>
+            </div>
+            
+            {/* Rating Distribution */}
+            <div className="space-y-1">
+              {customerStats.ratingDistribution.map((percentage, index) => (
+                <div key={index} className="flex items-center space-x-2 text-sm">
+                  <span className="w-8 text-gray-600 dark:text-gray-400">{5-index}★</span>
+                  <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div
+                      className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${percentage}%` }}
+                    ></div>
+                  </div>
+                  <span className="w-8 text-xs text-gray-500 dark:text-gray-400">{percentage}%</span>
+                </div>
+              )).reverse()}
+            </div>
+            
+            <div className="mt-3 text-center text-xs text-gray-500 dark:text-gray-400">
+              Basé sur {customerStats.totalRatings} évaluation{customerStats.totalRatings !== 1 ? 's' : ''}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Feedback Modal */}
       {isOpen && (

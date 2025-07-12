@@ -29,6 +29,17 @@ export default function Login() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmittingForm, setIsSubmittingForm] = useState(false);
 
+  // Password validation function
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return 'Le mot de passe doit contenir au moins 8 caractères.';
+    }
+    if (!/[A-Z]/.test(password)) {
+      return 'Le mot de passe doit contenir au moins une lettre majuscule.';
+    }
+    return true;
+  };
+
   const {
     register,
     handleSubmit,
@@ -191,10 +202,7 @@ export default function Login() {
                                 autoComplete="off"
                                 {...register('password', {
                                   required: 'Password is required.',
-                                  minLength: {
-                                    value: 6,
-                                    message: 'Min 6 characters.'
-                                  }
+                                  validate: validatePassword
                                 })}
                               />
                               <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-theme-tertiary" />
@@ -273,10 +281,7 @@ export default function Login() {
                                 autoComplete="off"
                                 {...register('password', {
                                   required: 'Password is required.',
-                                  minLength: {
-                                    value: 6,
-                                    message: 'Min 6 characters.'
-                                  }
+                                  validate: validatePassword
                                 })}
                               />
                               <LockClosedIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-theme-tertiary" />

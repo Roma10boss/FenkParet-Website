@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/useAuth';
-import AdminLayout from '../../components/admin/AdminLayout';
 import DashboardStats from '../../components/admin/DashboardStats';
 import RecentActivity from '../../components/admin/RecentActivity';
 import QuickActions from '../../components/admin/QuickActions';
@@ -80,8 +79,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <AdminLayout>
-      <div className="admin-dashboard">
+    <div className="admin-dashboard">
       <h1 className="text-3xl font-bold mb-6">Tableau de bord administrateur</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2">
@@ -99,7 +97,6 @@ export default function AdminDashboard() {
           <Charts chartsData={dashboardData.chartsData} />
         </div>
       </div>
-      </div>
-    </AdminLayout>
+    </div>
   );
 }

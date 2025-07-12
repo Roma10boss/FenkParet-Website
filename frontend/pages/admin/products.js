@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import AdminLayout from '../../components/admin/AdminLayout';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
 import ProductModal from '../../components/admin/ProductModal';
@@ -29,7 +28,7 @@ const ProductsPage = () => {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, [fetchProducts, fetchCategories]);
+  }, [currentPage, productsPerPage, searchTerm, filterCategory, filterStatus]);
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -196,8 +195,7 @@ const ProductsPage = () => {
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
+          <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -543,8 +541,7 @@ const ProductsPage = () => {
           />
         )}
       </div>
-    </AdminLayout>
-  );
+      );
 };
 
 export default ProductsPage;

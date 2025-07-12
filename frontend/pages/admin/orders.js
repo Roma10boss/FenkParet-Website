@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import AdminLayout from '../../components/admin/AdminLayout';
 import { useAlert } from '../../components/admin/AlertsPanel';
 import Card from '../../components/admin/Card';
 import OrderModal from '../../components/admin/OrderModal';
@@ -44,7 +43,7 @@ const OrdersPage = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [fetchOrders]);
+  }, [currentPage, searchTerm, filterStatus, filterPayment, dateRange]);
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -261,7 +260,6 @@ const OrdersPage = () => {
   }
 
   return (
-    <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -641,7 +639,6 @@ const OrdersPage = () => {
           />
         )}
       </div>
-    </AdminLayout>
   );
 };
 
