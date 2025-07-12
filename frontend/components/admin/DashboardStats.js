@@ -59,11 +59,14 @@ const StatCard = ({ title, value, change, changeType, icon: Icon, format = 'numb
 };
 
 const DashboardStats = ({ stats }) => {
+  // Get visitor count from localStorage
+  const visitorCount = parseInt(localStorage.getItem('visitorCount') || '1000');
+
   if (!stats) {
     // Render skeleton loading state
     return (
-      <div className="admin-grid admin-grid-cols-4">
-        {[...Array(4)].map((_, index) => (
+      <div className="admin-grid admin-grid-cols-5">
+        {[...Array(5)].map((_, index) => (
           <div key={index} className="admin-card">
             <div className="flex items-start space-x-3">
               <div className="w-12 h-12 bg-theme-secondary rounded-xl admin-skeleton" />
@@ -109,10 +112,17 @@ const DashboardStats = ({ stats }) => {
       format: 'percentage', 
       icon: ChartBarIcon 
     },
+    { 
+      title: 'Site Visitors', 
+      value: visitorCount, 
+      change: 2.5, 
+      changeType: 'positive', 
+      icon: UsersIcon 
+    },
   ];
 
   return (
-    <div className="admin-grid admin-grid-cols-4">
+    <div className="admin-grid admin-grid-cols-5">
       {statCards.map((stat, index) => (
         <div key={index} className="admin-scale-in" style={{ animationDelay: `${index * 0.1}s` }}>
           <StatCard {...stat} />

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isDev = process.env.NODE_ENV === 'development';
-const isStatic = process.env.BUILD_STATIC === 'true';
+const isStatic = !isDev && process.env.STATIC_EXPORT === 'true'; // Only enable static export for production builds
 
 const nextConfig = {
   // Only use static export for production builds when specified
@@ -19,6 +19,8 @@ const nextConfig = {
     }
   }),
   reactStrictMode: true,
+  
+  // Fast Refresh is enabled by default in Next.js 14
 
   // Image optimization configuration
   images: {
@@ -70,111 +72,113 @@ const nextConfig = {
     }
   }),
 
-  // Security and SEO headers
-  async headers() {
-    return [
-      {
-        source: '/(.*)', // Apply to all routes
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY', // Prevents clickjacking by disallowing framing
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff', // Prevents MIME-sniffing
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin', // Controls referrer information sent
-          },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on', // Enable DNS prefetching for performance
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains', // Force HTTPS
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()', // Restrict permissions
-          },
-        ],
-      },
-      {
-        source: '/sitemap.xml',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'application/xml',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=86400, stale-while-revalidate=43200', // Cache for 24 hours
-          },
-        ],
-      },
-      {
-        source: '/robots.txt',
-        headers: [
-          {
-            key: 'Content-Type',
-            value: 'text/plain',
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=86400', // Cache for 24 hours
-          },
-        ],
-      },
-    ];
-  },
+  // Security and SEO headers (only for non-static builds)
+  ...(!isStatic && {
+    async headers() {
+      return [
+        {
+          source: '/(.*)', // Apply to all routes
+          headers: [
+            {
+              key: 'X-Frame-Options',
+              value: 'DENY', // Prevents clickjacking by disallowing framing
+            },
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff', // Prevents MIME-sniffing
+            },
+            {
+              key: 'Referrer-Policy',
+              value: 'origin-when-cross-origin', // Controls referrer information sent
+            },
+            {
+              key: 'X-DNS-Prefetch-Control',
+              value: 'on', // Enable DNS prefetching for performance
+            },
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=31536000; includeSubDomains', // Force HTTPS
+            },
+            {
+              key: 'Permissions-Policy',
+              value: 'camera=(), microphone=(), geolocation=()', // Restrict permissions
+            },
+          ],
+        },
+        {
+          source: '/sitemap.xml',
+          headers: [
+            {
+              key: 'Content-Type',
+              value: 'application/xml',
+            },
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=86400, stale-while-revalidate=43200', // Cache for 24 hours
+            },
+          ],
+        },
+        {
+          source: '/robots.txt',
+          headers: [
+            {
+              key: 'Content-Type',
+              value: 'text/plain',
+            },
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=86400', // Cache for 24 hours
+            },
+          ],
+        },
+      ];
+    },
 
-  // SEO-friendly redirects
-  async redirects() {
-    return [
-      {
-        source: '/admin', // Incoming request path
-        destination: '/admin/dashboard', // Redirect to this path
-        permanent: true, // Permanent redirect (308 status code)
-      },
-      {
-        source: '/shop',
-        destination: '/products',
-        permanent: true,
-      },
-      {
-        source: '/store',
-        destination: '/products',
-        permanent: true,
-      },
-      {
-        source: '/catalogue',
-        destination: '/products',
-        permanent: true,
-      },
-      {
-        source: '/product/:id',
-        destination: '/products/:id',
-        permanent: true,
-      },
-    ];
-  },
+    // SEO-friendly redirects (only for non-static builds)
+    async redirects() {
+      return [
+        {
+          source: '/admin', // Incoming request path
+          destination: '/admin/dashboard', // Redirect to this path
+          permanent: true, // Permanent redirect (308 status code)
+        },
+        {
+          source: '/shop',
+          destination: '/products',
+          permanent: true,
+        },
+        {
+          source: '/store',
+          destination: '/products',
+          permanent: true,
+        },
+        {
+          source: '/catalogue',
+          destination: '/products',
+          permanent: true,
+        },
+        {
+          source: '/product/:id',
+          destination: '/products/:id',
+          permanent: true,
+        },
+      ];
+    },
 
-  // SEO rewrites for better URLs
-  async rewrites() {
-    return [
-      {
-        source: '/p/:id',
-        destination: '/products/:id',
-      },
-      {
-        source: '/c/:category',
-        destination: '/products/category/:category',
-      },
-    ];
-  },
+    // SEO rewrites for better URLs (only for non-static builds)
+    async rewrites() {
+      return [
+        {
+          source: '/p/:id',
+          destination: '/products/:id',
+        },
+        {
+          source: '/c/:category',
+          destination: '/products/category/:category',
+        },
+      ];
+    },
+  }),
 
   // Webpack configuration adjustments
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -183,7 +187,44 @@ const nextConfig = {
       { module: /node_modules\/socket\.io-client/ }, // Ignore warnings from socket.io-client module
     ];
 
+    // Performance optimizations
+    if (!dev) {
+      // Production optimizations
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+          admin: {
+            test: /[\\/]pages[\\/]admin[\\/]/,
+            name: 'admin',
+            chunks: 'all',
+            priority: 10,
+          },
+        },
+      };
+    }
+
+    // Enable fast refresh optimizations for development
+    if (dev && !isServer) {
+      config.optimization.usedExports = false;
+      // Fix source map issues
+      config.devtool = 'eval-source-map';
+    }
+
     return config;
+  },
+
+  // Compression and performance
+  compress: true,
+  
+  // Experimental features for performance
+  experimental: {
+    optimizeCss: !isDev,
+    scrollRestoration: true,
   },
 };
 

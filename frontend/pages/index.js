@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import SEO from '../components/SEO'; 
 
 import { toast } from 'react-hot-toast'; 
-import axios from 'axios'; 
+import api from '../utils/api'; 
 
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext'; 
@@ -193,60 +193,76 @@ export default function Home() {
         setLoadingData(true);
         try {
           // Fetch featured products from API
-          const featuredResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/products/featured?limit=4`);
+          const featuredResponse = await api.get('/products/featured?limit=4');
           const featuredData = featuredResponse.data.products || [];
 
           // Fetch new arrivals from API  
-          const newArrivalsResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/products/new-arrivals?limit=2`);
+          const newArrivalsResponse = await api.get('/products/new-arrivals?limit=2');
           const newArrivalsData = newArrivalsResponse.data.products || [];
 
           // Fetch categories from API
-          const categoriesResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/categories`);
+          const categoriesResponse = await api.get('/admin/categories');
           const categoriesData = categoriesResponse.data.categories || [];
           
           setFeaturedProducts(featuredData);
           setNewArrivals(newArrivalsData);
           setCategories(categoriesData);
           
+          // Only show success message if we actually got data
+          if (featuredData.length > 0 || newArrivalsData.length > 0 || categoriesData.length > 0) {
+            console.log('✅ Data loaded successfully from server');
+          } else {
+            // Server responded but no data available - use fallback without showing error
+            console.log('⚠️ Server responded but no data available, using fallback data');
+            useFallbackData();
+          }
+          
         } catch (error) {
           console.error('Error fetching data:', error);
           
-          // More specific error messages
+          // Only show error toast for actual network/server errors
           if (error.response?.status === 429) {
             toast.error('Trop de requêtes. Utilisation des données en cache.');
           } else if (error.code === 'NETWORK_ERROR' || !navigator.onLine) {
             toast.error('Pas de connexion internet. Utilisation des données hors ligne.');
-          } else {
+          } else if (error.response?.status >= 500) {
             toast.error('Serveur temporairement indisponible. Utilisation des données en cache.');
+          } else {
+            // For other errors (like 404, empty responses), don't show error toast
+            console.log('API returned no data, using fallback silently');
           }
           
-          // Fallback to mock data if API fails
-          const mockFeatured = [
-            {
-              _id: '1', name: 'Premium T-Shirt', price: 250, comparePrice: 300,
-              images: [{ url: 'https://placehold.co/400x300/e8f2e8/1f2937?text=T-Shirt', alt: 'Premium T-Shirt' }],
-              inventory: { stockStatus: 'in-stock', quantity: 50 }, featured: true, rating: 4, reviewCount: 24, averageRating: 4.5
-            },
-            {
-              _id: '2', name: 'Coffee Mug', price: 150,
-              images: [{ url: 'https://placehold.co/400x300/f0f7f0/1f2937?text=Coffee+Mug', alt: 'Coffee Mug' }],
-              inventory: { stockStatus: 'in-stock', quantity: 30 }, featured: true, rating: 4, reviewCount: 15, averageRating: 4.2
-            }
-          ];
-
-          const mockCategories = [
-            { _id: 'cat1', name: 'T-Shirts', slug: 't-shirts', productCount: 25 },
-            { _id: 'cat2', name: 'Mugs', slug: 'mugs', productCount: 30 },
-            { _id: 'cat3', name: 'Keychains', slug: 'keychains', productCount: 15 },
-            { _id: 'cat4', name: 'Phone Cases', slug: 'phone-cases', productCount: 20 }
-          ];
-          
-          setFeaturedProducts(mockFeatured);
-          setNewArrivals([]);
-          setCategories(mockCategories);
+          useFallbackData();
         } finally {
           setLoadingData(false);
         }
+      };
+
+      const useFallbackData = () => {
+        // Fallback to mock data if API fails
+        const mockFeatured = [
+          {
+            _id: '1', name: 'Premium T-Shirt', price: 250, comparePrice: 300,
+            images: [{ url: 'https://placehold.co/400x300/e8f2e8/1f2937?text=T-Shirt', alt: 'Premium T-Shirt' }],
+            inventory: { stockStatus: 'in-stock', quantity: 50 }, featured: true, rating: 4, reviewCount: 24, averageRating: 4.5
+          },
+          {
+            _id: '2', name: 'Coffee Mug', price: 150,
+            images: [{ url: 'https://placehold.co/400x300/f0f7f0/1f2937?text=Coffee+Mug', alt: 'Coffee Mug' }],
+            inventory: { stockStatus: 'in-stock', quantity: 30 }, featured: true, rating: 4, reviewCount: 15, averageRating: 4.2
+          }
+        ];
+
+        const mockCategories = [
+          { _id: 'cat1', name: 'T-Shirts', slug: 't-shirts', productCount: 25 },
+          { _id: 'cat2', name: 'Mugs', slug: 'mugs', productCount: 30 },
+          { _id: 'cat3', name: 'Keychains', slug: 'keychains', productCount: 15 },
+          { _id: 'cat4', name: 'Phone Cases', slug: 'phone-cases', productCount: 20 }
+        ];
+        
+        setFeaturedProducts(mockFeatured);
+        setNewArrivals([]);
+        setCategories(mockCategories);
       };
 
       fetchData();

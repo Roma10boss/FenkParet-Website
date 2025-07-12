@@ -5,6 +5,7 @@
     import { useRouter } from 'next/router';
     import { useAuth } from '../../hooks/useAuth';
     import { useTheme } from '../../context/ThemeContext';
+    import NotificationPanel from './NotificationPanel';
     import { 
       SunIcon, 
       Bars3Icon, 
@@ -66,39 +67,35 @@
       }, [authLoading, themeMounted, isAuthenticated, isAdmin, router, user]);
 
       const [sidebarOpen, setSidebarOpen] = useState(false);
-      const [notifications] = useState(3); // Mock notification count
-      const [showNotifications, setShowNotifications] = useState(false);
       const [showSettings, setShowSettings] = useState(false);
 
       // Close dropdowns when clicking outside
       useEffect(() => {
         const handleClickOutside = (event) => {
           if (!event.target.closest('.dropdown-container')) {
-            setShowNotifications(false);
             setShowSettings(false);
           }
         };
 
-        if (showNotifications || showSettings) {
+        if (showSettings) {
           document.addEventListener('mousedown', handleClickOutside);
           return () => document.removeEventListener('mousedown', handleClickOutside);
         }
-      }, [showNotifications, showSettings]);
+      }, [showSettings]);
 
       // Handle escape key to close dropdowns
       useEffect(() => {
         const handleEscapeKey = (event) => {
           if (event.key === 'Escape') {
-            setShowNotifications(false);
             setShowSettings(false);
           }
         };
 
-        if (showNotifications || showSettings) {
+        if (showSettings) {
           document.addEventListener('keydown', handleEscapeKey);
           return () => document.removeEventListener('keydown', handleEscapeKey);
         }
-      }, [showNotifications, showSettings]);
+      }, [showSettings]);
 
       const navItems = [
         { name: 'Tableau de bord', href: '/admin/dashboard', icon: ChartBarIcon },
@@ -254,73 +251,8 @@
                 </div>
 
                 <div className="flex items-center space-x-3">
-                  {/* Notifications Dropdown */}
-                  <div className="relative dropdown-container">
-                    <button 
-                      onClick={() => setShowNotifications(!showNotifications)}
-                      className="relative p-2 rounded-lg hover:bg-theme-secondary transition-colors"
-                    >
-                      <BellIcon className="w-5 h-5 text-theme-secondary" />
-                      {notifications > 0 && (
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-white text-xs rounded-full flex items-center justify-center">
-                          {notifications}
-                        </span>
-                      )}
-                    </button>
-                    
-                    {/* Notifications Dropdown */}
-                    {showNotifications && (
-                      <div className="absolute right-0 mt-2 w-80 bg-theme-primary border border-theme rounded-xl shadow-lg z-50 admin-fade-in">
-                        <div className="p-4 border-b border-theme">
-                          <h3 className="text-lg font-semibold text-theme-primary">Notifications</h3>
-                        </div>
-                        <div className="max-h-96 overflow-y-auto">
-                          <div className="p-4 border-b border-theme hover:bg-theme-secondary transition-colors">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                              <div>
-                                <p className="text-sm font-medium text-theme-primary">New order received</p>
-                                <p className="text-xs text-theme-secondary">Order #1234 from John Doe</p>
-                                <p className="text-xs text-theme-tertiary">2 minutes ago</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="p-4 border-b border-theme hover:bg-theme-secondary transition-colors">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <div>
-                                <p className="text-sm font-medium text-theme-primary">Low stock alert</p>
-                                <p className="text-xs text-theme-secondary">Product &quot;T-Shirt&quot; has only 5 items left</p>
-                                <p className="text-xs text-theme-tertiary">1 hour ago</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="p-4 hover:bg-theme-secondary transition-colors">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <div>
-                                <p className="text-sm font-medium text-theme-primary">New user registered</p>
-                                <p className="text-xs text-theme-secondary">jane.doe@example.com joined</p>
-                                <p className="text-xs text-theme-tertiary">3 hours ago</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4 border-t border-theme">
-                          <button 
-                            onClick={() => {
-                              setShowNotifications(false);
-                              // Navigate to notifications page or show notifications modal
-                              console.log('View all notifications clicked');
-                            }}
-                            className="w-full text-center text-sm text-accent hover:text-accent-dark transition-colors"
-                          >
-                            View all notifications
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  {/* Notifications Panel */}
+                  <NotificationPanel />
 
                   {/* Settings Dropdown */}
                   <div className="relative dropdown-container">
@@ -367,7 +299,7 @@
                           <button 
                             onClick={() => {
                               setShowSettings(false);
-                              setShowNotifications(true);
+                              console.log('Notification Settings clicked');
                             }}
                             className="w-full text-left p-3 rounded-lg hover:bg-theme-secondary transition-colors"
                           >
