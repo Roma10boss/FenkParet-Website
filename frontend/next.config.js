@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isDev = process.env.NODE_ENV === 'development';
-const isStatic = !isDev && process.env.STATIC_EXPORT === 'true'; // Only enable static export for production builds
+const isStatic = !isDev && (process.env.BUILD_STATIC === 'true' || process.env.STATIC_EXPORT === 'true'); // Only enable static export for production builds
 
 const nextConfig = {
   // Only use static export for production builds when specified
@@ -221,9 +221,8 @@ const nextConfig = {
   // Compression and performance
   compress: true,
   
-  // Experimental features for performance
+  // Experimental features for performance  
   experimental: {
-    optimizeCss: !isDev,
     scrollRestoration: true,
   },
 
