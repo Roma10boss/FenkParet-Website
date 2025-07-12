@@ -75,7 +75,7 @@ const useTranslation = () => {
       'faq.paymentMethods': 'What payment methods do you accept?',
       'faq.paymentAnswer': 'We accept MonCash payments. All payments are verified manually by our admin team within 48 hours.',
       'faq.returnsPolicy': 'Can I return or exchange items?',
-      'faq.returnsAnswer': 'Yes, we offer a 30-day return policy for items in original condition. Return shipping costs may apply.',
+      'faq.returnsAnswer': 'Yes, we offer a 7-day return policy for items in original condition. Return shipping costs may apply.',
       'faq.customDesigns': 'Do you offer custom designs?',
       'faq.customDesignsAnswer': 'Yes! We offer custom printing on t-shirts, mugs, and other items. Contact us for pricing and details.',
       'faq.trackOrder': 'How can I track my order?',
@@ -212,19 +212,19 @@ export default function ContactPage() {
     {
       icon: EnvelopeIcon,
       title: 'Email',
-      value: 'support@fenkparet.com',
-      link: 'mailto:support@fenkparet.com'
+      value: 'fenkparet509@gmail.com',
+      link: 'mailto:fenkparet509@gmail.com'
     },
     {
       icon: PhoneIcon,
       title: 'Téléphone',
-      value: '+509 1234 5678',
-      link: 'tel:+50912345678'
+      value: '(+509) 4745-8821',
+      link: 'tel:+50947458821'
     },
     {
       icon: MapPinIcon,
       title: 'Adresse',
-      value: '123 Main Street, Port-au-Prince, Haiti',
+      value: 'Port-au-Prince, Haiti',
       link: null
     },
     {
@@ -657,7 +657,7 @@ export default function ContactPage() {
                   Puis-je retourner ou échanger des articles?
                 </h3>
                 <p className="text-theme-secondary">
-                  Oui, nous offrons une politique de retour de 30 jours pour les articles en état d&apos;origine. Les frais de retour peuvent s&apos;appliquer.
+                  Oui, nous offrons une politique de retour de 7 jours pour les articles en état d&apos;origine. Les frais de retour peuvent s&apos;appliquer.
                 </p>
               </div>
             </div>
