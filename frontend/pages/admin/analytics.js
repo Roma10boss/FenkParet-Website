@@ -10,7 +10,7 @@ import {
   UsersIcon,
   ArrowDownTrayIcon,
   CalendarIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon as TrendingUpIcon,
   ShoppingCartIcon
 } from '@heroicons/react/24/outline';
 
@@ -152,7 +152,7 @@ const AnalyticsPage = () => {
           <h1 className="text-3xl font-bold text-theme-primary mb-2">Analyse des Ventes</h1>
           <p className="text-theme-secondary">Aperçu détaillé des performances et métriques de vente</p>
           {analytics.error && (
-            <p className="text-warning-color text-sm mt-1">⚠️ Données d'exemple (serveur non disponible)</p>
+            <p className="text-warning-color text-sm mt-1">⚠️ Données d&apos;exemple (serveur non disponible)</p>
           )}
         </div>
         

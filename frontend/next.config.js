@@ -226,6 +226,12 @@ const nextConfig = {
     optimizeCss: !isDev,
     scrollRestoration: true,
   },
+
+  // ESLint configuration
+  eslint: {
+    ignoreDuringBuilds: false,
+    dirs: ['pages', 'components', 'utils'],
+  },
 };
 
 module.exports = nextConfig;

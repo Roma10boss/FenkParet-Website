@@ -214,7 +214,7 @@ export default function Home() {
           } else {
             // Server responded but no data available - use fallback without showing error
             console.log('⚠️ Server responded but no data available, using fallback data');
-            useFallbackData();
+            loadFallbackData();
           }
           
         } catch (error) {
@@ -232,13 +232,13 @@ export default function Home() {
             console.log('API returned no data, using fallback silently');
           }
           
-          useFallbackData();
+          loadFallbackData();
         } finally {
           setLoadingData(false);
         }
       };
 
-      const useFallbackData = () => {
+      const loadFallbackData = () => {
         // Fallback to mock data if API fails
         const mockFeatured = [
           {
